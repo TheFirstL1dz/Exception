@@ -1,143 +1,191 @@
--- ExceptionUI Library
+local Exception = {}
 
-local ExceptionUI = {}
+-- Main container for the UI
+function Exception:CreateWindow()
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "Exception"
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Create the main exception UI
-function ExceptionUI.createMainUI(parent)
-    -- Instances
-    local Exception = Instance.new("ScreenGui")
-    local Main = Instance.new("Frame")
-    local UICorner = Instance.new("UICorner")
-    local Logo = Instance.new("ImageLabel")
-    local Title = Instance.new("TextLabel")
-    local Close = Instance.new("TextButton")
-    local TabFrame = Instance.new("Frame")
-    local UIGridLayout = Instance.new("UIGridLayout")
-    local TabButton = Instance.new("TextButton")
+    local main = Instance.new("Frame")
+    main.Name = "Main"
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
+    main.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
+    main.BorderSizePixel = 0
+    main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    main.Size = UDim2.new(0.4, 0, 0.4, 0)
+    main.Parent = gui
 
-    -- Properties
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 9)
+    corner.Parent = main
 
-    Exception.Name = "Exception"
-    Exception.Parent = parent or game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    Exception.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    -- Logo
+    local logo = Instance.new("ImageLabel")
+    logo.Name = "Logo"
+    logo.AnchorPoint = Vector2.new(0.5, 0.5)
+    logo.BackgroundTransparency = 1
+    logo.Position = UDim2.new(0.04, 0, 0.08, 0)
+    logo.Size = UDim2.new(0.3, 0, 0.3, 0)
+    logo.Image = "rbxassetid://94099000985882"
+    logo.Parent = main
 
-    Main.Name = "Main"
-    Main.Parent = Exception
-    Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
-    Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Main.BorderSizePixel = 0
-    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Main.Size = UDim2.new(0.5, 0, 0.400000006, 0)
+    -- Title
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.AnchorPoint = Vector2.new(0.5, 0.5)
+    title.BackgroundTransparency = 1
+    title.Position = UDim2.new(0.18, 0, 0.955, 0)
+    title.Size = UDim2.new(0.337, 0, 0.067, 0)
+    title.Font = Enum.Font.Oswald
+    title.Text = "Exception.red"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextScaled = true
+    title.TextWrapped = true
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = main
 
-    UICorner.CornerRadius = UDim.new(0, 9)
-    UICorner.Parent = Main
+    -- Close button
+    local close = Instance.new("TextButton")
+    close.Name = "Close"
+    close.AnchorPoint = Vector2.new(0.5, 0.5)
+    close.BackgroundTransparency = 1
+    close.Position = UDim2.new(0.97, 0, 0.06, 0)
+    close.Size = UDim2.new(0.05, 0, 0.1, 0)
+    close.AutoButtonColor = false
+    close.Font = Enum.Font.SourceSans
+    close.Text = "X"
+    close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    close.TextScaled = true
+    close.TextWrapped = true
+    close.Parent = main
 
-    Logo.Name = "Logo"
-    Logo.Parent = Main
-    Logo.AnchorPoint = Vector2.new(0.5, 0.5)
-    Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Logo.BackgroundTransparency = 1.000
-    Logo.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Logo.BorderSizePixel = 0
-    Logo.Position = UDim2.new(0.0399999991, 0, 0.0799999982, 0)
-    Logo.Size = UDim2.new(0.300000012, 0, 0.300000012, 0)
-    Logo.Image = "rbxassetid://94099000985882"
+    -- Tab navigation frame
+    local tabFrame = Instance.new("Frame")
+    tabFrame.Name = "TabFrame"
+    tabFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 35)
+    tabFrame.BorderSizePixel = 0
+    tabFrame.Position = UDim2.new(0, 0, 0.164, 0)
+    tabFrame.Size = UDim2.new(0, 182, 0, 326)
+    tabFrame.Parent = main
 
-    Title.Name = "Title"
-    Title.Parent = Main
-    Title.AnchorPoint = Vector2.new(0.5, 0.5)
-    Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Title.BackgroundTransparency = 1.000
-    Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Title.BorderSizePixel = 0
-    Title.Position = UDim2.new(0.180000022, 0, 0.954687536, 0)
-    Title.Size = UDim2.new(0.336633652, 0, 0.0670136362, 0)
-    Title.Font = Enum.Font.Oswald
-    Title.Text = "Exception.red"
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.TextScaled = true
-    Title.TextSize = 14.000
-    Title.TextWrapped = true
-    Title.TextXAlignment = Enum.TextXAlignment.Left
+    local tabCorner = Instance.new("UICorner")
+    tabCorner.Parent = tabFrame
 
-    Close.Name = "Close"
-    Close.Parent = Main
-    Close.AnchorPoint = Vector2.new(0.5, 0.5)
-    Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Close.BackgroundTransparency = 1.000
-    Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Close.BorderSizePixel = 0
-    Close.Position = UDim2.new(0.970000029, 0, 0.0599999987, 0)
-    Close.Size = UDim2.new(0.0500000007, 0, 0.100000001, 0)
-    Close.AutoButtonColor = false
-    Close.Font = Enum.Font.SourceSans
-    Close.Text = "X"
-    Close.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Close.TextScaled = true
-    Close.TextSize = 14.000
-    Close.TextWrapped = true
+    local grid = Instance.new("UIGridLayout")
+    grid.SortOrder = Enum.SortOrder.LayoutOrder
+    grid.CellSize = UDim2.new(0, 180, 0, 40)
+    grid.Parent = tabFrame
 
-    TabFrame.Name = "TabFrame"
-    TabFrame.Parent = Main
-    TabFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 35)
-    TabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TabFrame.BorderSizePixel = 0
-    TabFrame.Position = UDim2.new(0, 0, 0.164351851, 0)
-    TabFrame.Size = UDim2.new(0.189682126, 0, 0.754629612, 0)
+    -- Content frame
+    local contentFrame = Instance.new("Frame")
+    contentFrame.Name = "TabFrame"
+    contentFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 35)
+    contentFrame.BorderSizePixel = 0
+    contentFrame.Position = UDim2.new(0.62, 0, 0.54, 0)
+    contentFrame.Size = UDim2.new(0.74, 0, 0.7, 0)
+    contentFrame.Parent = main
 
-    UIGridLayout.Parent = TabFrame
-    UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIGridLayout.CellSize = UDim2.new(0, 180, 0, 40)
+    local contentCorner = Instance.new("UICorner")
+    contentCorner.Parent = contentFrame
 
-    TabButton.Name = "TabButton"
-    TabButton.Parent = TabFrame
-    TabButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TabButton.BackgroundTransparency = 1.000
-    TabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TabButton.BorderSizePixel = 0
-    TabButton.Size = UDim2.new(0.98901099, 0, 0.122699387, 0)
-    TabButton.AutoButtonColor = false
-    TabButton.Font = Enum.Font.SourceSans
-    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TabButton.TextScaled = true
-    TabButton.TextSize = 14.000
-    TabButton.TextWrapped = true
+    -- Left panel example
+    local leftPanel = Instance.new("Frame")
+    leftPanel.Name = "LeftExample"
+    leftPanel.AnchorPoint = Vector2.new(0.5, 0.5)
+    leftPanel.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
+    leftPanel.BorderSizePixel = 0
+    leftPanel.Position = UDim2.new(0.25, 0, 0.5, 0)
+    leftPanel.Size = UDim2.new(0.45, 0, 0.9, 0)
+    leftPanel.Parent = contentFrame
 
-    -- Close functionality
-    Close.MouseButton1Click:Connect(function()
-        Exception:Destroy()
-    end)
+    local leftCorner = Instance.new("UICorner")
+    leftCorner.Parent = leftPanel
 
-    return Exception
+    local leftLine = Instance.new("Frame")
+    leftLine.Name = "Line"
+    leftLine.AnchorPoint = Vector2.new(0.5, 0.5)
+    leftLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    leftLine.BackgroundTransparency = 0.55
+    leftLine.BorderSizePixel = 0
+    leftLine.Position = UDim2.new(0.25, 0, 0.13, 0)
+    leftLine.Size = UDim2.new(0.391, 0, 0.005, 0)
+    leftLine.Parent = leftPanel
+
+    local leftText = Instance.new("TextLabel")
+    leftText.Name = "TabText"
+    leftText.AnchorPoint = Vector2.new(0.5, 0.5)
+    leftText.BackgroundTransparency = 1
+    leftText.Position = UDim2.new(0.45, 0, 0.07, 0)
+    leftText.Size = UDim2.new(0.782, 0, 0.1, 0)
+    leftText.Font = Enum.Font.SourceSans
+    leftText.Text = "Tab"
+    leftText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    leftText.TextScaled = true
+    leftText.TextWrapped = true
+    leftText.TextXAlignment = Enum.TextXAlignment.Left
+    leftText.Parent = leftPanel
+
+    -- Right panel example
+    local rightPanel = Instance.new("Frame")
+    rightPanel.Name = "RightExample"
+    rightPanel.AnchorPoint = Vector2.new(0.5, 0.5)
+    rightPanel.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
+    rightPanel.BorderSizePixel = 0
+    rightPanel.Position = UDim2.new(0.75, 0, 0.5, 0)
+    rightPanel.Size = UDim2.new(0.45, 0, 0.9, 0)
+    rightPanel.Parent = contentFrame
+
+    local rightCorner = Instance.new("UICorner")
+    rightCorner.Parent = rightPanel
+
+    local rightLine = Instance.new("Frame")
+    rightLine.Name = "Line"
+    rightLine.AnchorPoint = Vector2.new(0.5, 0.5)
+    rightLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    rightLine.BackgroundTransparency = 0.55
+    rightLine.BorderSizePixel = 0
+    rightLine.Position = UDim2.new(0.75, 0, 0.13, 0)
+    rightLine.Size = UDim2.new(0.391, 0, 0.005, 0)
+    rightLine.Parent = rightPanel
+
+    local rightText = Instance.new("TextLabel")
+    rightText.Name = "TabText"
+    rightText.AnchorPoint = Vector2.new(0.5, 0.5)
+    rightText.BackgroundTransparency = 1
+    rightText.Position = UDim2.new(0.52, 0, 0.07, 0)
+    rightText.Size = UDim2.new(0.782, 0, 0.1, 0)
+    rightText.Font = Enum.Font.SourceSans
+    rightText.Text = "Tab"
+    rightText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    rightText.TextScaled = true
+    rightText.TextWrapped = true
+    rightText.TextXAlignment = Enum.TextXAlignment.Right
+    rightText.Parent = rightPanel
+
+    -- Tab button example (hidden template)
+    local tabButton = Instance.new("TextButton")
+    tabButton.Name = "TabButtonExample"
+    tabButton.BackgroundTransparency = 1
+    tabButton.Size = UDim2.new(0, 200, 0, 50)
+    tabButton.AutoButtonColor = false
+    tabButton.Font = Enum.Font.SourceSans
+    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tabButton.TextScaled = true
+    tabButton.TextWrapped = true
+    tabButton.Visible = false
+    tabButton.Parent = tabFrame
+
+    return {
+        MainWindow = main,
+        CloseButton = close,
+        TabFrame = tabFrame,
+        ContentFrame = contentFrame,
+        LeftPanel = leftPanel,
+        RightPanel = rightPanel,
+        TabButtonTemplate = tabButton
+    }
 end
 
--- Add a tab button to the tab frame
-function ExceptionUI.addTabButton(parent, buttonText)
-    local TabButton = Instance.new("TextButton")
-    TabButton.Name = "TabButton"
-    TabButton.Parent = parent
-    TabButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TabButton.BackgroundTransparency = 1.000
-    TabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TabButton.BorderSizePixel = 0
-    TabButton.Size = UDim2.new(0.98901099, 0, 0.122699387, 0)
-    TabButton.AutoButtonColor = false
-    TabButton.Font = Enum.Font.SourceSans
-    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TabButton.TextScaled = true
-    TabButton.TextSize = 14.000
-    TabButton.TextWrapped = true
-    TabButton.Text = buttonText
-
-    return TabButton
-end
-
--- Function to add multiple tabs
-function ExceptionUI.addMultipleTabs(tabFrame, buttonTexts)
-    for _, text in ipairs(buttonTexts) do
-        ExceptionUI.addTabButton(tabFrame, text)
-    end
-end
-
-return ExceptionUI
+return Exception
