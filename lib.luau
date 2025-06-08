@@ -1,202 +1,293 @@
--- Create a simple and modular UI Library
+local ExceptionUI = {}
+ExceptionUI.__index = ExceptionUI
 
--- Instance Builder: Helper function to create UI elements
-local function createInstance(instanceType, properties)
-    local instance = Instance.new(instanceType)
-    for property, value in pairs(properties) do
-        instance[property] = value
+-- Library initialization
+function ExceptionUI.new()
+    local self = setmetatable({}, ExceptionUI)
+    
+    -- Create main UI elements
+    self.gui = Instance.new("ScreenGui")
+    self.gui.Name = "Exception"
+    self.gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    self.gui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    
+    -- Clone all the provided elements
+    self.main = script.Main:Clone()
+    self.main.Parent = self.gui
+    
+    -- Set up references to key elements
+    self.tabFrame = self.main.TabFrame
+    self.contentFrame = self.main.TabFrame_2
+    self.leftExample = self.contentFrame.LeftExample
+    self.rightExample = self.contentFrame.RightExample
+    
+    -- Initialize tab system
+    self.tabs = {}
+    self.currentTab = nil
+    
+    -- Set up close button
+    self.main.Close.MouseButton1Click:Connect(function()
+        self:Toggle()
+    end)
+    
+    -- Hide example elements
+    self.tabFrame.TabButtonExample.Visible = false
+    self.leftExample.ItemFrame.CheckboxExample.Visible = false
+    self.leftExample.ItemFrame.ButtonExample.Visible = false
+    
+    -- Make draggable
+    self:Dragify(self.main)
+    
+    return self
+end
+
+-- Make window draggable
+function ExceptionUI:Dragify(frame)
+    local dragToggle = nil
+    local dragSpeed = 0.25
+    local dragStart = nil
+    local startPos = nil
+
+    local function updateInput(input)
+        local delta = input.Position - dragStart
+        local position = UDim2.new(
+            startPos.X.Scale, 
+            startPos.X.Offset + delta.X, 
+            startPos.Y.Scale, 
+            startPos.Y.Offset + delta.Y
+        )
+        frame.Position = position
     end
-    return instance
-end
 
--- Create UI elements
-local UI = {}
-
--- The main screen
-UI.ScreenGui = function()
-    return createInstance("ScreenGui", {
-        Name = "UI_Library",
-        Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"),
-        ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    })
-end
-
--- Main frame for UI container
-UI.MainFrame = function(parent)
-    local frame = createInstance("Frame", {
-        Name = "Main",
-        Parent = parent,
-        BackgroundColor3 = Color3.fromRGB(23, 23, 29),
-        BorderSizePixel = 0,
-        Size = UDim2.new(0.4, 0, 0.4, 0),
-        Position = UDim2.new(0.5, 0, 0.5, 0),
-        AnchorPoint = Vector2.new(0.5, 0.5)
-    })
-    createInstance("UICorner", { Parent = frame })
-    return frame
-end
-
--- Title label
-UI.TitleLabel = function(parent)
-    return createInstance("TextLabel", {
-        Name = "Title",
-        Parent = parent,
-        BackgroundTransparency = 1,
-        Font = Enum.Font.Oswald,
-        Text = "Example Title",
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 14,
-        TextScaled = true,
-        TextXAlignment = Enum.TextXAlignment.Left,
-        Position = UDim2.new(0.18, 0, 0.95, 0),
-        Size = UDim2.new(0.33, 0, 0.07, 0)
-    })
-end
-
--- Close button
-UI.CloseButton = function(parent)
-    local button = createInstance("TextButton", {
-        Name = "Close",
-        Parent = parent,
-        BackgroundTransparency = 1,
-        Font = Enum.Font.SourceSans,
-        Text = "X",
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 14,
-        TextScaled = true,
-        Position = UDim2.new(0.97, 0, 0.06, 0),
-        Size = UDim2.new(0.05, 0, 0.1, 0),
-        AutoButtonColor = false
-    })
-    button.MouseButton1Click:Connect(function()
-        parent:Destroy()
-    end)
-    return button
-end
-
--- Tab Frame (Container for tabs)
-UI.TabFrame = function(parent)
-    local frame = createInstance("Frame", {
-        Name = "TabFrame",
-        Parent = parent,
-        BackgroundColor3 = Color3.fromRGB(28, 28, 35),
-        BorderSizePixel = 0,
-        Size = UDim2.new(0, 182, 0, 326),
-        Position = UDim2.new(0, 0, 0.16, 0)
-    })
-    local grid = createInstance("UIGridLayout", {
-        Parent = frame,
-        SortOrder = Enum.SortOrder.LayoutOrder,
-        CellSize = UDim2.new(0, 180, 0, 40)
-    })
-    return frame
-end
-
--- Tab Button (Switch between tabs)
-UI.TabButton = function(parent, text, callback)
-    local button = createInstance("TextButton", {
-        Name = "TabButton",
-        Parent = parent,
-        BackgroundTransparency = 1,
-        Font = Enum.Font.SourceSans,
-        Text = text,
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 14,
-        TextScaled = true,
-        Size = UDim2.new(0, 200, 0, 50),
-        AutoButtonColor = false
-    })
-    button.MouseButton1Click:Connect(callback)
-    return button
-end
-
--- Checkbox (For toggling options)
-UI.Checkbox = function(parent, title, callback)
-    local frame = createInstance("Frame", {
-        Name = "CheckboxFrame",
-        Parent = parent,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(0.998, 0, 0.183, 0)
-    })
-
-    local button = createInstance("TextButton", {
-        Name = "CheckboxButton",
-        Parent = frame,
-        BackgroundColor3 = Color3.fromRGB(255, 0, 60),
-        BorderSizePixel = 0,
-        Size = UDim2.new(0, 30, 0, 30),
-        Font = Enum.Font.SourceSans,
-        Text = "",
-        TextColor3 = Color3.fromRGB(0, 0, 0),
-        TextSize = 14
-    })
-    local checkboxTitle = createInstance("TextLabel", {
-        Name = "CheckboxTitle",
-        Parent = frame,
-        BackgroundTransparency = 1,
-        Font = Enum.Font.SourceSans,
-        Text = title,
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 14,
-        TextWrapped = true,
-        TextXAlignment = Enum.TextXAlignment.Left,
-        Position = UDim2.new(0.6, 0, 0.5, 0),
-        Size = UDim2.new(0.83, 0, 0.7, 0)
-    })
-
-    button.MouseButton1Click:Connect(function()
-        local isChecked = button.BackgroundColor3 == Color3.fromRGB(255, 0, 60)
-        button.BackgroundColor3 = isChecked and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 60)
-        if callback then
-            callback(isChecked)
+    frame.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+            dragToggle = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragToggle = false
+                end
+            end)
         end
     end)
 
-    return frame
-end
-
--- Button (A clickable button)
-UI.Button = function(parent, title, callback)
-    local frame = createInstance("Frame", {
-        Name = "ButtonFrame",
-        Parent = parent,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(0.998, 0, 0.183, 0)
-    })
-    
-    local buttonTitle = createInstance("TextLabel", {
-        Name = "ButtonTitle",
-        Parent = frame,
-        BackgroundTransparency = 1,
-        Font = Enum.Font.SourceSans,
-        Text = title,
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 14,
-        TextWrapped = true,
-        TextXAlignment = Enum.TextXAlignment.Left,
-        Size = UDim2.new(0.83, 0, 0.7, 0)
-    })
-
-    local button = createInstance("TextButton", {
-        Name = "Button",
-        Parent = frame,
-        BackgroundColor3 = Color3.fromRGB(14, 255, 187),
-        BorderSizePixel = 0,
-        Position = UDim2.new(0.75, 0, 0.5, 0),
-        Size = UDim2.new(0.4, 0, 0.7, 0),
-        Font = Enum.Font.SourceSans,
-        Text = "",
-        TextColor3 = Color3.fromRGB(0, 0, 0),
-        TextSize = 14
-    })
-    
-    button.MouseButton1Click:Connect(function()
-        if callback then
-            callback()
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            if dragToggle then
+                updateInput(input)
+            end
         end
     end)
-
-    return frame
 end
 
-return UI
+-- Toggle UI visibility
+function ExceptionUI:Toggle()
+    self.gui.Enabled = not self.gui.Enabled
+end
+
+-- Tab management
+function ExceptionUI:CreateTab(name, side)
+    side = side or "left" -- default to left side
+    
+    -- Create tab button
+    local tabButton = self.tabFrame.TabButtonExample:Clone()
+    tabButton.Name = name
+    tabButton.Text = name
+    tabButton.Visible = true
+    tabButton.Parent = self.tabFrame
+    
+    -- Create content container
+    local contentContainer
+    if side == "left" then
+        contentContainer = self.leftExample:Clone()
+        contentContainer.Name = name
+        contentContainer.Parent = self.contentFrame
+        contentContainer.Visible = false
+    else
+        contentContainer = self.rightExample:Clone()
+        contentContainer.Name = name
+        contentContainer.Parent = self.contentFrame
+        contentContainer.Visible = false
+    end
+    
+    -- Update tab text
+    local tabText = contentContainer:FindFirstChild("TabText")
+    if tabText then
+        tabText.Text = name
+    end
+    
+    -- Set up tab button click
+    tabButton.MouseButton1Click:Connect(function()
+        self:SwitchTab(name)
+    end)
+    
+    -- Store tab data
+    local tabData = {
+        name = name,
+        button = tabButton,
+        container = contentContainer,
+        side = side,
+        items = {}
+    }
+    
+    self.tabs[name] = tabData
+    
+    -- Set as current tab if first tab
+    if not self.currentTab then
+        self:SwitchTab(name)
+    end
+    
+    return tabData
+end
+
+function ExceptionUI:SwitchTab(name)
+    if not self.tabs[name] then return end
+    
+    -- Hide current tab
+    if self.currentTab then
+        self.currentTab.container.Visible = false
+        self.currentTab.button.BackgroundTransparency = 1
+    end
+    
+    -- Show new tab
+    self.tabs[name].container.Visible = true
+    self.tabs[name].button.BackgroundTransparency = 0.8
+    self.currentTab = self.tabs[name]
+end
+
+-- UI Elements
+function ExceptionUI:AddCheckbox(tabName, options)
+    if not self.tabs[tabName] then return end
+    
+    local tab = self.tabs[tabName]
+    local checkboxExample = tab.container.ItemFrame.CheckboxExample
+    
+    -- Create new checkbox
+    local newCheckbox = checkboxExample:Clone()
+    newCheckbox.Name = options.name or "Checkbox_"..tostring(#tab.items + 1)
+    newCheckbox.Visible = true
+    newCheckbox.Parent = tab.container.ItemFrame
+    
+    -- Update text
+    local title = newCheckbox:FindFirstChild("CheckboxTitle")
+    if title then
+        title.Text = options.text or "Checkbox"
+    end
+    
+    -- Set up functionality
+    local button = newCheckbox:FindFirstChild("CheckboxButton")
+    local isChecked = options.default or false
+    
+    local function updateVisual()
+        button.BackgroundColor3 = isChecked and Color3.fromRGB(255, 0, 60) or Color3.fromRGB(100, 100, 100)
+    end
+    
+    button.MouseButton1Click:Connect(function()
+        isChecked = not isChecked
+        updateVisual()
+        if options.callback then
+            options.callback(isChecked)
+        end
+    end)
+    
+    updateVisual()
+    
+    -- Store checkbox data
+    local checkboxData = {
+        name = options.name,
+        instance = newCheckbox,
+        value = isChecked,
+        toggle = function(self, state)
+            if state ~= nil then
+                isChecked = state
+            else
+                isChecked = not isChecked
+            end
+            updateVisual()
+        end
+    }
+    
+    table.insert(tab.items, checkboxData)
+    
+    return checkboxData
+end
+
+function ExceptionUI:AddButton(tabName, options)
+    if not self.tabs[tabName] then return end
+    
+    local tab = self.tabs[tabName]
+    local buttonExample = tab.container.ItemFrame.ButtonExample
+    
+    -- Create new button
+    local newButton = buttonExample:Clone()
+    newButton.Name = options.name or "Button_"..tostring(#tab.items + 1)
+    newButton.Visible = true
+    newButton.Parent = tab.container.ItemFrame
+    
+    -- Update text
+    local title = newButton:FindFirstChild("ButtonTitle")
+    if title then
+        title.Text = options.text or "Button"
+    end
+    
+    local button = newButton:FindFirstChild("Button")
+    if button then
+        button.Text = options.buttonText or "Execute"
+    end
+    
+    -- Set up functionality
+    if button and options.callback then
+        button.MouseButton1Click:Connect(function()
+            options.callback()
+        end)
+    end
+    
+    -- Store button data
+    local buttonData = {
+        name = options.name,
+        instance = newButton
+    }
+    
+    table.insert(tab.items, buttonData)
+    
+    return buttonData
+end
+
+-- Initialize the library
+local library = ExceptionUI.new()
+
+-- Example usage:
+--[[
+-- Create tabs
+local leftTab = library:CreateTab("Main")
+local rightTab = library:CreateTab("Settings", "right")
+
+-- Add elements
+library:AddCheckbox("Main", {
+    name = "ExampleCheckbox",
+    text = "Enable Feature",
+    default = true,
+    callback = function(value)
+        print("Checkbox toggled:", value)
+    end
+})
+
+library:AddButton("Main", {
+    name = "ExampleButton",
+    text = "Important Action",
+    buttonText = "Run",
+    callback = function()
+        print("Button clicked!")
+    end
+})
+
+library:AddCheckbox("Settings", {
+    text = "Advanced Mode",
+    callback = function(value)
+        print("Advanced mode:", value)
+    end
+})
+]]
+
+return library
