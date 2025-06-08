@@ -1,219 +1,143 @@
-local Exception = {}
+-- ExceptionUI Library
 
--- Default properties
-Exception.Theme = {
-    MainColor = Color3.fromRGB(23, 23, 29),
-    SecondaryColor = Color3.fromRGB(28, 28, 35),
-    TextColor = Color3.fromRGB(255, 255, 255),
-    CornerRadius = UDim.new(0, 9)
-}
+local ExceptionUI = {}
 
--- Create a new window
-function Exception:CreateWindow(options)
-    local window = {}
-    options = options or {}
-    
-    -- Create the main GUI
-    local ExceptionGUI = Instance.new("ScreenGui")
-    ExceptionGUI.Name = "Exception"
-    ExceptionGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ExceptionGUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
-    -- Main frame
+-- Create the main exception UI
+function ExceptionUI.createMainUI(parent)
+    -- Instances
+    local Exception = Instance.new("ScreenGui")
     local Main = Instance.new("Frame")
-    Main.Name = "Main"
-    Main.Parent = ExceptionGUI
-    Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = self.Theme.MainColor
-    Main.BorderSizePixel = 0
-    Main.Position = options.Position or UDim2.new(0.5, 0, 0.5, 0)
-    Main.Size = options.Size or UDim2.new(0.5, 0, 0.4, 0)
-
     local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = self.Theme.CornerRadius
+    local Logo = Instance.new("ImageLabel")
+    local Title = Instance.new("TextLabel")
+    local Close = Instance.new("TextButton")
+    local TabFrame = Instance.new("Frame")
+    local UIGridLayout = Instance.new("UIGridLayout")
+    local TabButton = Instance.new("TextButton")
+
+    -- Properties
+
+    Exception.Name = "Exception"
+    Exception.Parent = parent or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    Exception.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    Main.Name = "Main"
+    Main.Parent = Exception
+    Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
+    Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Main.BorderSizePixel = 0
+    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Main.Size = UDim2.new(0.5, 0, 0.400000006, 0)
+
+    UICorner.CornerRadius = UDim.new(0, 9)
     UICorner.Parent = Main
 
-    -- Logo
-    local Logo = Instance.new("ImageLabel")
     Logo.Name = "Logo"
     Logo.Parent = Main
     Logo.AnchorPoint = Vector2.new(0.5, 0.5)
-    Logo.BackgroundTransparency = 1
-    Logo.Position = UDim2.new(0.04, 0, 0.08, 0)
-    Logo.Size = UDim2.new(0.3, 0, 0.3, 0)
-    Logo.Image = options.Logo or "rbxassetid://94099000985882"
+    Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Logo.BackgroundTransparency = 1.000
+    Logo.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Logo.BorderSizePixel = 0
+    Logo.Position = UDim2.new(0.0399999991, 0, 0.0799999982, 0)
+    Logo.Size = UDim2.new(0.300000012, 0, 0.300000012, 0)
+    Logo.Image = "rbxassetid://94099000985882"
 
-    -- Title
-    local Title = Instance.new("TextLabel")
     Title.Name = "Title"
     Title.Parent = Main
     Title.AnchorPoint = Vector2.new(0.5, 0.5)
-    Title.BackgroundTransparency = 1
-    Title.Position = UDim2.new(0.18, 0, 0.955, 0)
-    Title.Size = UDim2.new(0.337, 0, 0.067, 0)
+    Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1.000
+    Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Title.BorderSizePixel = 0
+    Title.Position = UDim2.new(0.180000022, 0, 0.954687536, 0)
+    Title.Size = UDim2.new(0.336633652, 0, 0.0670136362, 0)
     Title.Font = Enum.Font.Oswald
-    Title.Text = options.Title or "Exception.red"
-    Title.TextColor3 = self.Theme.TextColor
+    Title.Text = "Exception.red"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.TextScaled = true
+    Title.TextSize = 14.000
     Title.TextWrapped = true
     Title.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Close button
-    local Close = Instance.new("TextButton")
     Close.Name = "Close"
     Close.Parent = Main
     Close.AnchorPoint = Vector2.new(0.5, 0.5)
-    Close.BackgroundTransparency = 1
-    Close.Position = UDim2.new(0.97, 0, 0.06, 0)
-    Close.Size = UDim2.new(0.05, 0, 0.1, 0)
+    Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Close.BackgroundTransparency = 1.000
+    Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Close.BorderSizePixel = 0
+    Close.Position = UDim2.new(0.970000029, 0, 0.0599999987, 0)
+    Close.Size = UDim2.new(0.0500000007, 0, 0.100000001, 0)
     Close.AutoButtonColor = false
     Close.Font = Enum.Font.SourceSans
     Close.Text = "X"
-    Close.TextColor3 = self.Theme.TextColor
+    Close.TextColor3 = Color3.fromRGB(255, 255, 255)
     Close.TextScaled = true
+    Close.TextSize = 14.000
     Close.TextWrapped = true
 
-    -- Tab frame
-    local TabFrame = Instance.new("Frame")
     TabFrame.Name = "TabFrame"
     TabFrame.Parent = Main
-    TabFrame.BackgroundColor3 = self.Theme.SecondaryColor
+    TabFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 35)
+    TabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TabFrame.BorderSizePixel = 0
-    TabFrame.Position = UDim2.new(0, 0, 0.164, 0)
-    TabFrame.Size = UDim2.new(0.19, 0, 0.755, 0)
+    TabFrame.Position = UDim2.new(0, 0, 0.164351851, 0)
+    TabFrame.Size = UDim2.new(0.189682126, 0, 0.754629612, 0)
 
-    local UIGridLayout = Instance.new("UIGridLayout")
     UIGridLayout.Parent = TabFrame
     UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIGridLayout.CellSize = UDim2.new(0, 180, 0, 40)
 
-    -- Store references
-    window.GUI = ExceptionGUI
-    window.MainFrame = Main
-    window.TabFrame = TabFrame
-    window.Tabs = {}
+    TabButton.Name = "TabButton"
+    TabButton.Parent = TabFrame
+    TabButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.BackgroundTransparency = 1.000
+    TabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TabButton.BorderSizePixel = 0
+    TabButton.Size = UDim2.new(0.98901099, 0, 0.122699387, 0)
+    TabButton.AutoButtonColor = false
+    TabButton.Font = Enum.Font.SourceSans
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.TextScaled = true
+    TabButton.TextSize = 14.000
+    TabButton.TextWrapped = true
 
-    -- Close button functionality
+    -- Close functionality
     Close.MouseButton1Click:Connect(function()
-        ExceptionGUI:Destroy()
+        Exception:Destroy()
     end)
 
-    -- Dragging functionality
-    local UserInputService = game:GetService("UserInputService")
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
-
-    local function update(input)
-        local delta = input.Position - dragStart
-        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-
-    Main.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = Main.Position
-            
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    Main.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input)
-        end
-    end)
-
-    -- Create tab function
-    function window:CreateTab(tabName)
-        local tab = {}
-        tab.Name = tabName or "Tab"
-        
-        -- Tab button
-        local TabButton = Instance.new("TextButton")
-        TabButton.Name = tabName or "TabButton"
-        TabButton.Parent = window.TabFrame
-        TabButton.BackgroundTransparency = 1
-        TabButton.Size = UDim2.new(0.989, 0, 0.123, 0)
-        TabButton.AutoButtonColor = false
-        TabButton.Font = Enum.Font.SourceSans
-        TabButton.Text = tabName or "Tab"
-        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        TabButton.TextScaled = true
-        TabButton.TextWrapped = true
-        
-        -- Content frame
-        local ContentFrame = Instance.new("Frame")
-        ContentFrame.Name = tabName.."Content"
-        ContentFrame.Parent = window.MainFrame
-        ContentFrame.BackgroundTransparency = 1
-        ContentFrame.Position = UDim2.new(0.2, 0, 0.164, 0)
-        ContentFrame.Size = UDim2.new(0.79, 0, 0.755, 0)
-        ContentFrame.Visible = false
-        
-        -- Store references
-        tab.Button = TabButton
-        tab.Content = ContentFrame
-        
-        -- Show this tab by default if it's the first one
-        if #window.Tabs == 0 then
-            ContentFrame.Visible = true
-            TabButton.TextColor3 = Color3.fromRGB(255, 170, 0) -- Highlight color
-        end
-        
-        -- Tab switching functionality
-        TabButton.MouseButton1Click:Connect(function()
-            for _, otherTab in pairs(window.Tabs) do
-                otherTab.Content.Visible = false
-                otherTab.Button.TextColor3 = self.Theme.TextColor
-            end
-            ContentFrame.Visible = true
-            TabButton.TextColor3 = Color3.fromRGB(255, 170, 0)
-        end)
-        
-        -- Add button creation functions to the tab
-        function tab:CreateButton(options)
-            local button = Instance.new("TextButton")
-            button.Name = options.Name or "Button"
-            button.Parent = tab.Content
-            button.BackgroundColor3 = self.Theme.SecondaryColor
-            button.Size = UDim2.new(0.9, 0, 0.1, 0)
-            button.Position = options.Position or UDim2.new(0.05, 0, 0.05 + (#tab.Content:GetChildren() * 0.11), 0)
-            button.Font = Enum.Font.SourceSans
-            button.Text = options.Text or "Button"
-            button.TextColor3 = self.Theme.TextColor
-            button.TextScaled = true
-            
-            local UICorner = Instance.new("UICorner")
-            UICorner.CornerRadius = UDim.new(0, 6)
-            UICorner.Parent = button
-            
-            if options.Callback and type(options.Callback) == "function" then
-                button.MouseButton1Click:Connect(options.Callback)
-            end
-            
-            return button
-        end
-        
-        -- Add to window tabs
-        table.insert(window.Tabs, tab)
-        
-        return tab
-    end
-    
-    return window
+    return Exception
 end
 
-return Exception
+-- Add a tab button to the tab frame
+function ExceptionUI.addTabButton(parent, buttonText)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Name = "TabButton"
+    TabButton.Parent = parent
+    TabButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.BackgroundTransparency = 1.000
+    TabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TabButton.BorderSizePixel = 0
+    TabButton.Size = UDim2.new(0.98901099, 0, 0.122699387, 0)
+    TabButton.AutoButtonColor = false
+    TabButton.Font = Enum.Font.SourceSans
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.TextScaled = true
+    TabButton.TextSize = 14.000
+    TabButton.TextWrapped = true
+    TabButton.Text = buttonText
+
+    return TabButton
+end
+
+-- Function to add multiple tabs
+function ExceptionUI.addMultipleTabs(tabFrame, buttonTexts)
+    for _, text in ipairs(buttonTexts) do
+        ExceptionUI.addTabButton(tabFrame, text)
+    end
+end
+
+return ExceptionUI
