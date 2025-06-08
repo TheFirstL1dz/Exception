@@ -150,7 +150,7 @@ function Exception:CreateWindow(options)
         TabButton.AutoButtonColor = false
         TabButton.Font = Enum.Font.SourceSans
         TabButton.Text = tabName or "Tab"
-        TabButton.TextColor3 = self.Theme.TextColor
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         TabButton.TextScaled = true
         TabButton.TextWrapped = true
         
