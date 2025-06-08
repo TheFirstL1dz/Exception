@@ -1,191 +1,202 @@
-local Exception = {}
+-- Create a simple and modular UI Library
 
--- Main container for the UI
-function Exception:CreateWindow()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "Exception"
-    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
-    local main = Instance.new("Frame")
-    main.Name = "Main"
-    main.AnchorPoint = Vector2.new(0.5, 0.5)
-    main.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
-    main.BorderSizePixel = 0
-    main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    main.Size = UDim2.new(0.4, 0, 0.4, 0)
-    main.Parent = gui
-
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 9)
-    corner.Parent = main
-
-    -- Logo
-    local logo = Instance.new("ImageLabel")
-    logo.Name = "Logo"
-    logo.AnchorPoint = Vector2.new(0.5, 0.5)
-    logo.BackgroundTransparency = 1
-    logo.Position = UDim2.new(0.04, 0, 0.08, 0)
-    logo.Size = UDim2.new(0.3, 0, 0.3, 0)
-    logo.Image = "rbxassetid://94099000985882"
-    logo.Parent = main
-
-    -- Title
-    local title = Instance.new("TextLabel")
-    title.Name = "Title"
-    title.AnchorPoint = Vector2.new(0.5, 0.5)
-    title.BackgroundTransparency = 1
-    title.Position = UDim2.new(0.18, 0, 0.955, 0)
-    title.Size = UDim2.new(0.337, 0, 0.067, 0)
-    title.Font = Enum.Font.Oswald
-    title.Text = "Exception.red"
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.TextScaled = true
-    title.TextWrapped = true
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.Parent = main
-
-    -- Close button
-    local close = Instance.new("TextButton")
-    close.Name = "Close"
-    close.AnchorPoint = Vector2.new(0.5, 0.5)
-    close.BackgroundTransparency = 1
-    close.Position = UDim2.new(0.97, 0, 0.06, 0)
-    close.Size = UDim2.new(0.05, 0, 0.1, 0)
-    close.AutoButtonColor = false
-    close.Font = Enum.Font.SourceSans
-    close.Text = "X"
-    close.TextColor3 = Color3.fromRGB(255, 255, 255)
-    close.TextScaled = true
-    close.TextWrapped = true
-    close.Parent = main
-
-    -- Tab navigation frame
-    local tabFrame = Instance.new("Frame")
-    tabFrame.Name = "TabFrame"
-    tabFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 35)
-    tabFrame.BorderSizePixel = 0
-    tabFrame.Position = UDim2.new(0, 0, 0.164, 0)
-    tabFrame.Size = UDim2.new(0, 182, 0, 326)
-    tabFrame.Parent = main
-
-    local tabCorner = Instance.new("UICorner")
-    tabCorner.Parent = tabFrame
-
-    local grid = Instance.new("UIGridLayout")
-    grid.SortOrder = Enum.SortOrder.LayoutOrder
-    grid.CellSize = UDim2.new(0, 180, 0, 40)
-    grid.Parent = tabFrame
-
-    -- Content frame
-    local contentFrame = Instance.new("Frame")
-    contentFrame.Name = "TabFrame"
-    contentFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    contentFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 35)
-    contentFrame.BorderSizePixel = 0
-    contentFrame.Position = UDim2.new(0.62, 0, 0.54, 0)
-    contentFrame.Size = UDim2.new(0.74, 0, 0.7, 0)
-    contentFrame.Parent = main
-
-    local contentCorner = Instance.new("UICorner")
-    contentCorner.Parent = contentFrame
-
-    -- Left panel example
-    local leftPanel = Instance.new("Frame")
-    leftPanel.Name = "LeftExample"
-    leftPanel.AnchorPoint = Vector2.new(0.5, 0.5)
-    leftPanel.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
-    leftPanel.BorderSizePixel = 0
-    leftPanel.Position = UDim2.new(0.25, 0, 0.5, 0)
-    leftPanel.Size = UDim2.new(0.45, 0, 0.9, 0)
-    leftPanel.Parent = contentFrame
-
-    local leftCorner = Instance.new("UICorner")
-    leftCorner.Parent = leftPanel
-
-    local leftLine = Instance.new("Frame")
-    leftLine.Name = "Line"
-    leftLine.AnchorPoint = Vector2.new(0.5, 0.5)
-    leftLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    leftLine.BackgroundTransparency = 0.55
-    leftLine.BorderSizePixel = 0
-    leftLine.Position = UDim2.new(0.25, 0, 0.13, 0)
-    leftLine.Size = UDim2.new(0.391, 0, 0.005, 0)
-    leftLine.Parent = leftPanel
-
-    local leftText = Instance.new("TextLabel")
-    leftText.Name = "TabText"
-    leftText.AnchorPoint = Vector2.new(0.5, 0.5)
-    leftText.BackgroundTransparency = 1
-    leftText.Position = UDim2.new(0.45, 0, 0.07, 0)
-    leftText.Size = UDim2.new(0.782, 0, 0.1, 0)
-    leftText.Font = Enum.Font.SourceSans
-    leftText.Text = "Tab"
-    leftText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    leftText.TextScaled = true
-    leftText.TextWrapped = true
-    leftText.TextXAlignment = Enum.TextXAlignment.Left
-    leftText.Parent = leftPanel
-
-    -- Right panel example
-    local rightPanel = Instance.new("Frame")
-    rightPanel.Name = "RightExample"
-    rightPanel.AnchorPoint = Vector2.new(0.5, 0.5)
-    rightPanel.BackgroundColor3 = Color3.fromRGB(23, 23, 29)
-    rightPanel.BorderSizePixel = 0
-    rightPanel.Position = UDim2.new(0.75, 0, 0.5, 0)
-    rightPanel.Size = UDim2.new(0.45, 0, 0.9, 0)
-    rightPanel.Parent = contentFrame
-
-    local rightCorner = Instance.new("UICorner")
-    rightCorner.Parent = rightPanel
-
-    local rightLine = Instance.new("Frame")
-    rightLine.Name = "Line"
-    rightLine.AnchorPoint = Vector2.new(0.5, 0.5)
-    rightLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    rightLine.BackgroundTransparency = 0.55
-    rightLine.BorderSizePixel = 0
-    rightLine.Position = UDim2.new(0.75, 0, 0.13, 0)
-    rightLine.Size = UDim2.new(0.391, 0, 0.005, 0)
-    rightLine.Parent = rightPanel
-
-    local rightText = Instance.new("TextLabel")
-    rightText.Name = "TabText"
-    rightText.AnchorPoint = Vector2.new(0.5, 0.5)
-    rightText.BackgroundTransparency = 1
-    rightText.Position = UDim2.new(0.52, 0, 0.07, 0)
-    rightText.Size = UDim2.new(0.782, 0, 0.1, 0)
-    rightText.Font = Enum.Font.SourceSans
-    rightText.Text = "Tab"
-    rightText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    rightText.TextScaled = true
-    rightText.TextWrapped = true
-    rightText.TextXAlignment = Enum.TextXAlignment.Right
-    rightText.Parent = rightPanel
-
-    -- Tab button example (hidden template)
-    local tabButton = Instance.new("TextButton")
-    tabButton.Name = "TabButtonExample"
-    tabButton.BackgroundTransparency = 1
-    tabButton.Size = UDim2.new(0, 200, 0, 50)
-    tabButton.AutoButtonColor = false
-    tabButton.Font = Enum.Font.SourceSans
-    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tabButton.TextScaled = true
-    tabButton.TextWrapped = true
-    tabButton.Visible = false
-    tabButton.Parent = tabFrame
-
-    return {
-        MainWindow = main,
-        CloseButton = close,
-        TabFrame = tabFrame,
-        ContentFrame = contentFrame,
-        LeftPanel = leftPanel,
-        RightPanel = rightPanel,
-        TabButtonTemplate = tabButton
-    }
+-- Instance Builder: Helper function to create UI elements
+local function createInstance(instanceType, properties)
+    local instance = Instance.new(instanceType)
+    for property, value in pairs(properties) do
+        instance[property] = value
+    end
+    return instance
 end
 
-return Exception
+-- Create UI elements
+local UI = {}
+
+-- The main screen
+UI.ScreenGui = function()
+    return createInstance("ScreenGui", {
+        Name = "UI_Library",
+        Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"),
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    })
+end
+
+-- Main frame for UI container
+UI.MainFrame = function(parent)
+    local frame = createInstance("Frame", {
+        Name = "Main",
+        Parent = parent,
+        BackgroundColor3 = Color3.fromRGB(23, 23, 29),
+        BorderSizePixel = 0,
+        Size = UDim2.new(0.4, 0, 0.4, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5)
+    })
+    createInstance("UICorner", { Parent = frame })
+    return frame
+end
+
+-- Title label
+UI.TitleLabel = function(parent)
+    return createInstance("TextLabel", {
+        Name = "Title",
+        Parent = parent,
+        BackgroundTransparency = 1,
+        Font = Enum.Font.Oswald,
+        Text = "Example Title",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 14,
+        TextScaled = true,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Position = UDim2.new(0.18, 0, 0.95, 0),
+        Size = UDim2.new(0.33, 0, 0.07, 0)
+    })
+end
+
+-- Close button
+UI.CloseButton = function(parent)
+    local button = createInstance("TextButton", {
+        Name = "Close",
+        Parent = parent,
+        BackgroundTransparency = 1,
+        Font = Enum.Font.SourceSans,
+        Text = "X",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 14,
+        TextScaled = true,
+        Position = UDim2.new(0.97, 0, 0.06, 0),
+        Size = UDim2.new(0.05, 0, 0.1, 0),
+        AutoButtonColor = false
+    })
+    button.MouseButton1Click:Connect(function()
+        parent:Destroy()
+    end)
+    return button
+end
+
+-- Tab Frame (Container for tabs)
+UI.TabFrame = function(parent)
+    local frame = createInstance("Frame", {
+        Name = "TabFrame",
+        Parent = parent,
+        BackgroundColor3 = Color3.fromRGB(28, 28, 35),
+        BorderSizePixel = 0,
+        Size = UDim2.new(0, 182, 0, 326),
+        Position = UDim2.new(0, 0, 0.16, 0)
+    })
+    local grid = createInstance("UIGridLayout", {
+        Parent = frame,
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        CellSize = UDim2.new(0, 180, 0, 40)
+    })
+    return frame
+end
+
+-- Tab Button (Switch between tabs)
+UI.TabButton = function(parent, text, callback)
+    local button = createInstance("TextButton", {
+        Name = "TabButton",
+        Parent = parent,
+        BackgroundTransparency = 1,
+        Font = Enum.Font.SourceSans,
+        Text = text,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 14,
+        TextScaled = true,
+        Size = UDim2.new(0, 200, 0, 50),
+        AutoButtonColor = false
+    })
+    button.MouseButton1Click:Connect(callback)
+    return button
+end
+
+-- Checkbox (For toggling options)
+UI.Checkbox = function(parent, title, callback)
+    local frame = createInstance("Frame", {
+        Name = "CheckboxFrame",
+        Parent = parent,
+        BackgroundTransparency = 1,
+        Size = UDim2.new(0.998, 0, 0.183, 0)
+    })
+
+    local button = createInstance("TextButton", {
+        Name = "CheckboxButton",
+        Parent = frame,
+        BackgroundColor3 = Color3.fromRGB(255, 0, 60),
+        BorderSizePixel = 0,
+        Size = UDim2.new(0, 30, 0, 30),
+        Font = Enum.Font.SourceSans,
+        Text = "",
+        TextColor3 = Color3.fromRGB(0, 0, 0),
+        TextSize = 14
+    })
+    local checkboxTitle = createInstance("TextLabel", {
+        Name = "CheckboxTitle",
+        Parent = frame,
+        BackgroundTransparency = 1,
+        Font = Enum.Font.SourceSans,
+        Text = title,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 14,
+        TextWrapped = true,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Position = UDim2.new(0.6, 0, 0.5, 0),
+        Size = UDim2.new(0.83, 0, 0.7, 0)
+    })
+
+    button.MouseButton1Click:Connect(function()
+        local isChecked = button.BackgroundColor3 == Color3.fromRGB(255, 0, 60)
+        button.BackgroundColor3 = isChecked and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 60)
+        if callback then
+            callback(isChecked)
+        end
+    end)
+
+    return frame
+end
+
+-- Button (A clickable button)
+UI.Button = function(parent, title, callback)
+    local frame = createInstance("Frame", {
+        Name = "ButtonFrame",
+        Parent = parent,
+        BackgroundTransparency = 1,
+        Size = UDim2.new(0.998, 0, 0.183, 0)
+    })
+    
+    local buttonTitle = createInstance("TextLabel", {
+        Name = "ButtonTitle",
+        Parent = frame,
+        BackgroundTransparency = 1,
+        Font = Enum.Font.SourceSans,
+        Text = title,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 14,
+        TextWrapped = true,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Size = UDim2.new(0.83, 0, 0.7, 0)
+    })
+
+    local button = createInstance("TextButton", {
+        Name = "Button",
+        Parent = frame,
+        BackgroundColor3 = Color3.fromRGB(14, 255, 187),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0.75, 0, 0.5, 0),
+        Size = UDim2.new(0.4, 0, 0.7, 0),
+        Font = Enum.Font.SourceSans,
+        Text = "",
+        TextColor3 = Color3.fromRGB(0, 0, 0),
+        TextSize = 14
+    })
+    
+    button.MouseButton1Click:Connect(function()
+        if callback then
+            callback()
+        end
+    end)
+
+    return frame
+end
+
+return UI
